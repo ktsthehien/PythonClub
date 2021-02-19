@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from .models import Meeting, MeetingMinutes, Resource, Event
 import datetime
+from .forms import MeetingForm
 
 # Create your tests here.
 class MeetingTest(TestCase):
@@ -53,4 +54,54 @@ class EventTest(TestCase):
 
     def test_tablename(self):
         self.assertEqual(str(Event._meta.db_table), 'event')
+
+class NewMeetingForm(TestCase):
+    
+    def test_meetingform(self):
+        data={
+                'meetingtitle':'Weekend meeting', 
+                'meetingdate':'2021-01-16', 
+                'meetingtime':'12:00:00', 
+                'location':'Tacoma', 
+                'agenda':'Python for web design'
+            }
+        form=MeetingForm (data) 
+        self.assertTrue(form.is_valid)
+    #this test is failing
+    def test_meetingform_Invalid(self):
+        data={
+                'meetingtitle':'Weekend meeting', 
+                'meetingdate':'January 2, 2020',  
+                'location':'Tacoma', 
+                'agenda':'Python for web design'
+            }
+        form=MeetingForm (data) 
+        self.assertFalse(form.is_valid)
+
+class NewResourceForm(TestCase):
+    
+    def test_resourceform(self):
+        data={
+                'resourcename':'python website',
+                'resourcetype':'book',
+                'url':'https://www.python.org/',
+                'dateentered':'2021-01-27',
+                'userid':'hao',
+                'description':'a good resource for beginer'
+            }
+        form=ResourceForm (data) 
+        self.assertTrue(form.is_valid)
+    #this test is failing
+    def test_resourceform_Invalid(self):
+        data={
+                'resourcename':'python website',
+                'resourcetype':'book',
+                'url':'https://www.python.org/',
+                'dateentered':'January 2, 2020',
+                'userid':'hao',
+                'description':'a good resource for beginer'
+            }
+        form=ResourceForm (data) 
+        self.assertFalse(form.is_valid)
+
 
